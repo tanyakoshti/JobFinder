@@ -1,4 +1,13 @@
-const API_URL = "YOUR_CLOUDFLARE_WORKER_URL";
+const API_URL = "https://job-ai-backend.tanya.workers.dev"; // Updated to match your worker URL
+
+// Load saved skills when the popup opens
+document.addEventListener('DOMContentLoaded', () => {
+  chrome.storage.local.get(['skills'], (result) => {
+    if (result.skills) {
+      document.getElementById('skills').value = result.skills;
+    }
+  });
+});
 
 document.getElementById('dashboard-btn').addEventListener('click', () => {
   chrome.tabs.create({ url: 'dashboard.html' });
@@ -9,7 +18,12 @@ document.getElementById('analyze-btn').addEventListener('click', async () => {
   const desc = document.getElementById('job-desc').value;
   const btn = document.getElementById('analyze-btn');
   
-  if (!skills || !desc) return alert('Fill all fields');
+  if (!skills) return alert('Please enter your skills');
+  
+  // SAVE SKILLS TO STORAGE so the LinkedIn button can use them!
+  chrome.storage.local.set({ skills: skills });
+  
+  if (!desc) return alert('Please enter a job description');
   
   btn.innerText = 'Analyzing...';
   try {
