@@ -1,0 +1,18 @@
+body { font-family: system-ui; }
+.popup-body { width: 300px; padding: 15px; }
+textarea { width: 100%; height: 80px; margin-bottom: 10px; padding: 8px; box-sizing: border-box; }
+button { width: 100%; padding: 10px; cursor: pointer; background: #0a66c2; color: white; border: none; border-radius: 4px; margin-bottom: 10px; }
+button.secondary { background: #666; }
+.hidden { display: none; }
+.score-badge { display: inline-block; padding: 5px 10px; border-radius: 12px; font-weight: bold; color: white; margin-bottom: 10px; }
+.green { background: #10B981; } .yellow { background: #F59E0B; } .red { background: #EF4444; }
+
+/* Dashboard */
+.dashboard-body { padding: 40px; background: #f3f4f6; }
+.job-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.job-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
+/* LinkedIn Overlay */
+.ai-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 99999; }
+.ai-overlay-content { background: white; padding: 30px; border-radius: 12px; max-width: 500px; width: 100%; }
+.ai-btn { margin-left: 10px; background-color: #10B981 !important; }

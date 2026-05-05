@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="popup-body">
+  <h2>Job AI Finder</h2>
+  <textarea id="skills" placeholder="Enter your skills..."></textarea>
+  <textarea id="job-desc" placeholder="Paste job description..."></textarea>
+  <button id="analyze-btn">Analyze Job</button>
+  <div id="result" class="hidden">
+    <div id="score" class="score-badge"></div>
+    <p id="summary"></p>
+    <p><strong>Missing Skills:</strong> <span id="missing"></span></p>
+    <button id="save-btn" class="hidden">💾 Save Job</button>
+  </div>
+  <button id="dashboard-btn" class="secondary">Open Dashboard</button>
+  <script src="popup.js"></script>
+</body>
+</html>
