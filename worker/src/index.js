@@ -26,6 +26,7 @@ export default {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
+            // Let's explicitly use the free model we talked about
             model: "meta-llama/llama-3.3-70b-instruct:free",
             response_format: { type: "json_object" },
             messages: [{
@@ -39,6 +40,12 @@ export default {
         });
         
         const data = await aiResponse.json();
+        
+        // FIX: If OpenRouter returns an error, we catch it here instead of crashing
+        if (!data.choices || !data.choices[0]) {
+          throw new Error("OpenRouter Error: " + JSON.stringify(data));
+        }
+
         const result = JSON.parse(data.choices[0].message.content);
         return new Response(JSON.stringify(result), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
