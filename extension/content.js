@@ -1,64 +1,73 @@
-const API_URL = "https://job-ai-backend.tanya.workers.dev"; // Replace with your actual URL
+console.log("Job AI Finder: content.js injected successfully!");
 
-function injectButton() {
-  // If the button is already there, don't add another one
-  if (document.getElementById("job-ai-analyze-btn")) return;
+const API_URL = "https://job-ai-backend.tanya.workers.dev"; // Your worker URL
 
-  // Check all the different CSS classes LinkedIn uses for the Apply button container
-  const actionContainer = document.querySelector('.jobs-apply-button--top-card') || 
-                          document.querySelector('.jobs-s-apply') ||
-                          document.querySelector('.jobs-unified-top-card__action-buttons') ||
-                          document.querySelector('.job-details-jobs-unified-top-card__action-buttons') ||
-                          document.querySelector('.jobs-details-top-card__actions');
+function injectFloatingButton() {
+  if (document.getElementById("job-ai-floating-btn")) return;
 
-  if (actionContainer) {
-    const btn = document.createElement("button");
-    btn.id = "job-ai-analyze-btn";
-    btn.innerText = "⭐ Analyze Job";
-    btn.style.cssText = `
-      background: #10b981; color: white; border: none; 
-      padding: 8px 16px; border-radius: 20px; font-weight: 600; 
-      cursor: pointer; margin-left: 10px; font-size: 16px;
-      display: inline-flex; align-items: center; justify-content: center;
-      min-height: 32px;
-    `;
+  // We are removing the check for the job description. 
+  // We will force the button to render no matter what to prove the extension is working.
 
-    btn.addEventListener("click", async () => {
-      btn.innerText = "⏳ Analyzing...";
-      
-      const descElement = document.querySelector('#job-details') || 
-                          document.querySelector('.jobs-description') || 
-                          document.querySelector('.jobs-description-content__text');
-                          
-      const jobDescription = descElement ? descElement.innerText : "No description found.";
+  const btn = document.createElement("button");
+  btn.id = "job-ai-floating-btn";
+  btn.innerText = "⭐ Analyze Job with AI";
+  
+  // Placed on the BOTTOM LEFT so LinkedIn's chat box doesn't cover it
+  btn.style.cssText = `
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 2147483647; 
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  `;
 
-      chrome.storage.local.get(["skills"], async (result) => {
-        const skills = result.skills || "";
-        if (!skills) {
-          alert("Please open the extension popup and add your skills first!");
-          btn.innerText = "⭐ Analyze Job";
-          return;
-        }
+  btn.addEventListener("click", async () => {
+    btn.innerText = "⏳ Analyzing...";
+    
+    // Look for the job description. If we can't find it, just grab all the text on the screen as a fallback
+    const descElement = document.querySelector('#job-details') || 
+                        document.querySelector('.jobs-description') || 
+                        document.querySelector('.jobs-description-content__text') ||
+                        document.querySelector('article');
 
-        try {
-          const response = await fetch(`${API_URL}/analyze`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ skills, jobDescription })
-          });
-          
-          const data = await response.json();
-          alert(`Score: ${data.score}/5\n\nMissing Skills:\n${data.missing_skills.join(", ")}`);
-          btn.innerText = "⭐ Analyze Job";
-        } catch (err) {
-          alert("Error analyzing job. Check console.");
-          btn.innerText = "⭐ Analyze Job";
-        }
-      });
+    const jobDescription = descElement ? descElement.innerText : document.body.innerText.substring(0, 3000);
+
+    chrome.storage.local.get(["skills"], async (result) => {
+      const skills = result.skills || "";
+      if (!skills) {
+        alert("Please open the extension popup in the top right and add your skills first!");
+        btn.innerText = "⭐ Analyze Job with AI";
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/analyze`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ skills, jobDescription })
+        });
+        
+        const data = await response.json();
+        alert(`Score: ${data.score}/5\n\nMissing Skills:\n${data.missing_skills.join(", ")}`);
+        btn.innerText = "⭐ Analyze Job with AI";
+      } catch (err) {
+        alert("Error analyzing job. Make sure your Worker is running.");
+        btn.innerText = "⭐ Analyze Job with AI";
+      }
     });
+  });
 
-    actionContainer.appendChild(btn);
-  }
+  document.body.appendChild(btn);
+  console.log("Job AI Finder: Button injected onto the page!");
 }
 
-setInterval(injectButton, 1500);
+// Try to inject it every 2 seconds unconditionally
+setInterval(injectFloatingButton, 2000);
