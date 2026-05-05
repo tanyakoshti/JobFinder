@@ -1,20 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <title>Job AI Finder</title>
+  <link rel="stylesheet" href="popup.css">
 </head>
-<body class="popup-body">
-  <h2>Job AI Finder</h2>
-  <textarea id="skills" placeholder="Enter your skills..."></textarea>
-  <textarea id="job-desc" placeholder="Paste job description..."></textarea>
-  <button id="analyze-btn">Analyze Job</button>
-  <div id="result" class="hidden">
-    <div id="score" class="score-badge"></div>
-    <p id="summary"></p>
-    <p><strong>Missing Skills:</strong> <span id="missing"></span></p>
-    <button id="save-btn" class="hidden">💾 Save Job</button>
+<body>
+  <div class="header">
+    <h1>✨ Job AI Finder</h1>
+    <button id="dashboard-btn" class="icon-btn" title="Open Dashboard">📊</button>
   </div>
-  <button id="dashboard-btn" class="secondary">Open Dashboard</button>
+
+  <div class="input-group">
+    <label for="skills">Your Skills (Comma separated)</label>
+    <textarea id="skills" placeholder="e.g. React, Python, AWS, Docker..."></textarea>
+    <button id="save-skills-btn" class="primary-btn mt-2">💾 Save Skills</button>
+  </div>
+
+  <div class="accordion">
+    <details>
+      <summary>Manual Job Analysis</summary>
+      <div class="input-group mt-2">
+        <label for="job-desc">Paste Job Description</label>
+        <textarea id="job-desc" placeholder="Paste job description here..."></textarea>
+        <button id="analyze-btn" class="secondary-btn mt-2">Analyze Manual Job</button>
+      </div>
+    </details>
+  </div>
+
+  <div id="result" class="hidden result-card">
+    <div class="score-row">
+      <span class="label">Match Score</span>
+      <span id="score" class="score-badge"></span>
+    </div>
+    <div class="summary-box">
+      <span class="label">Summary</span>
+      <p id="summary"></p>
+    </div>
+    <div class="missing-box">
+      <span class="label">Missing Skills</span>
+      <p id="missing"></p>
+    </div>
+    <button id="save-btn" class="secondary-btn">💾 Save to Dashboard</button>
+  </div>
+  
+  <div class="footer-hint">
+    💡 Tip: Use the green floating button directly on LinkedIn jobs!
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>
