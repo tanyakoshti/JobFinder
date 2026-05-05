@@ -26,7 +26,7 @@ export default {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            model: "mistralai/mistral-7b-instruct",
+            model: "meta-llama/llama-3.3-70b-instruct:free",
             response_format: { type: "json_object" },
             messages: [{
               role: "system",
